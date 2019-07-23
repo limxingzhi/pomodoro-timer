@@ -1,0 +1,36 @@
+### My gitignore4
+# /dist
+
+### Windows gitignore https://github.com/github/gitignore/blob/master/Global/Windows.gitignore
+
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+### Webpack gitignore  https://github.com/webpack/webpack/blob/master/.gitignore
+
+/node_modules
+/test/js
+/test/browsertest/js
+/test/fixtures/temp-cache-fixture
+/benchmark/js
+/benchmark/fixtures
+/examples/**/dist
+/coverage
+.DS_Store
+*.log
+.idea
+.vscode
+.eslintcache
+package-lock.json

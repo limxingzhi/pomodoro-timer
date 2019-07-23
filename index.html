@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Podoromo Timer</title>
+</head>
+
+<body class="text-center">
+
+  <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+    <header class="masthead mb-auto title-container">
+      <div class="inner">
+        <!-- <h5 class="masthead-brand">Podoromo Timer</h5> -->
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link" target="_blank" href="">foo bar</a>
+          <a href="https://scotch.io/bar-talk/build-a-pomodoro-timer-with-vuejs-solution-to-code-challenge-6"
+        target="_blank" class="nav-link">Codepen from scotch.io</a>
+        </nav>
+      </div>
+    </header>
+    <!-- our template -->
+    <main role="main" id="app" class="inner cover">
+
+      <h5 class="cover-heading">{{ title }}</h5>
+      <div id="timer">
+        <p class=lead">
+          <span id="minutes">{{ countMinutes }}</span>
+          <span id="middle">:</span>
+          <span id="seconds">{{ countSeconds }}</span>
+        </p>
+      </div>
+
+      <div id="buttons" class="cover-heading">
+        <!--     Start TImer -->
+        <button id="start" class="btn btn-lg btn-primary" v-if="!timer" @click="countingState">Start</button>
+        <!--     Reset Timer -->
+        <!-- <button id="done" class="btn btn-lg btn-success" v-if="resetButton" @click="resetTimer">Done</button> -->
+        <!--     Pause Timer -->
+        <button id="stop" class="btn btn-lg btn-warning" v-if="timer" @click="pausedState">Pause</button>
+        <!--     Restart Timer -->
+        <button id="reset" class="btn btn-lg btn-danger" v-if="resetButton" @click="resetState">Reset</button>
+      </div>
+
+      <span class="cover-heading task-display-name" hidden id="task-display">{{ taskName }}</span>
+
+      <h5 class="cover-heading" id="task-input"><input type="text" class="form-control" placeholder="Enter title" v-model="taskName"></h5>
+    </main>
+
+    <p class="text-sm">This is a MVP for a Pomodoro timer that uses local storage.</p>
+  </div>
+
+  <link rel="stylesheet" href="./styles/bootstrap-min-4-0-0.css">
+  <link rel="stylesheet" href="./styles/cover.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+
+</html>
