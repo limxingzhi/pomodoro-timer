@@ -36,18 +36,18 @@
 
       <div id="buttons" class="cover-heading">
         <!--     Start TImer -->
-        <button id="start" class="btn btn-lg btn-primary" v-if="!timer" @click="countingState">Start</button>
+        <button id="start-btn" class="btn btn-lg btn-primary" v-if="!timer" @click="countingState">Start</button>
         <!--     Reset Timer -->
         <!-- <button id="done" class="btn btn-lg btn-success" v-if="resetButton" @click="resetTimer">Done</button> -->
         <!--     Pause Timer -->
-        <button id="stop" class="btn btn-lg btn-warning" v-if="timer" @click="pausedState">Pause</button>
+        <button id="pause-btn" class="btn btn-lg btn-warning" v-if="timer" @click="pausedState">Pause</button>
         <!--     Restart Timer -->
-        <button id="reset" class="btn btn-lg btn-danger" v-if="resetButton" @click="resetState">Reset</button>
+        <button id="reset-btn" class="btn btn-lg btn-danger" v-if="resetButton" @click="resetState">Reset</button>
       </div>
 
       <span class="cover-heading task-display-name" hidden id="task-display">{{ taskName }}</span>
 
-      <h5 class="cover-heading" id="task-input"><input type="text" class="form-control" placeholder="Enter title" v-model="taskName" v-on:keyup.enter="countingState"></h5>
+      <input id="task-input" type="text" class="form-control cover-heading" placeholder="Enter title" v-model="taskName" v-on:keyup.enter="countingState">
 
       <ul class="task-history">
         <li class="task-history-item" v-for="item in taskDone"><button class="btn btn-sm btn-danger" :id="item.UUID" @click="removeTask(item.UUID)">X</button><span class="list-item-text" style="display:inline-block;">{{ item.taskName }} | {{ item.timeMinutesFancy }} min {{ item.timeSecondsFancy }} sec<br />{{item.timeDone}}</span></li>
@@ -60,7 +60,8 @@
   <link rel="stylesheet" href="./styles/cover.css">
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
-  <script src="./app.js"></script>
+  <script src="./scripts/utils.js"></script>
+  <script src="./scripts/app.js"></script>
 </body>
 
 </html>

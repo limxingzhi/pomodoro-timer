@@ -1,14 +1,16 @@
+'use strict'
+
 // https://scotch.io/bar-talk/build-a-pomodoro-timer-with-vuejs-solution-to-code-challenge-6
 const app = new Vue({
   el: '#app',
   data: {
     resetButton: false,
-    title: 'Enter your task name and hit Start!',
+    title: 'Welcome!',
     taskName: '',
     timer: null,
     taskDone: [],
     private: {
-      time: -5,
+      timeLeft: -5,
       timeInput: -5,
       message: {
         start: 'Hit start!',
@@ -18,7 +20,7 @@ const app = new Vue({
       alertTiming: 800,
       default: {
         taskName: 'task',
-        time: (25 * 60)
+        timeLeft: (25 * 60)
       }
     }
   },
@@ -33,8 +35,8 @@ const app = new Vue({
       this.taskDone.splice(this.taskDone.indexOf(item), 1);
     },
     countingState: function () {
-      if (this.private.timeInput === -5 && this.private.time === -5) { this.private.timeInput = this.private.default.time; }
-      this.private.time = (this.private.time === -5 ? this.private.default.time : this.private.time);
+      if (this.private.timeInput === -5 && this.private.timeLeft === -5) { this.private.timeInput = this.private.default.timeLeft; }
+      this.private.timeLeft = (this.private.timeLeft === -5 ? this.private.default.timeLeft : this.private.timeLeft);
 
       this.timer = setInterval(() => this._countdown(), 1000);
       this.resetButton = true;
@@ -44,16 +46,20 @@ const app = new Vue({
 
       document.getElementById('task-input').setAttribute('hidden', 'hidden');
       document.getElementById('task-display').removeAttribute('hidden');
+
+      setTimeout(() => { document.getElementById('pause-btn').focus(); }, 100);
     },
     pausedState: function () {
       clearInterval(this.timer);
       this.timer = null;
       this.resetButton = true;
       this.title = this.private.message.pause;
+
+      setTimeout(() => { document.getElementById('start-btn').focus(); }, 100);
     },
     resetState: function () {
       this._saveTask();
-      this.private.time = -5;
+      this.private.timeLeft = -5;
       clearInterval(this.timer);
       this.timer = null;
       this.resetButton = false;
@@ -63,6 +69,8 @@ const app = new Vue({
 
       document.getElementById('task-input').removeAttribute('hidden');
       document.getElementById('task-display').setAttribute('hidden', 'hidden');
+
+      document.getElementById('task-input').focus();
     },
     _completeState: function () {
       const bgColor = document.body.style.backgroundColor;
@@ -73,11 +81,10 @@ const app = new Vue({
       sendNotification(this.taskName);
     },
     _saveTask: function () {
-      const time = this.private.timeInput - this.private.time;
+      const time = this.private.timeInput - this.private.timeLeft;
       const timeDone = new Date();
-      var completedTask = {
+      const completedTask = {
         'UUID': generateUUID(),
-        'time': time,
         'timeMinutesFancy': Math.floor(time / 60),
         'timeSecondsFancy': time - (Math.floor(time / 60)) * 60,
         'taskName': this.taskName,
@@ -89,67 +96,26 @@ const app = new Vue({
       return (time < 10 ? '0' : '') + time;
     },
     _countdown: function () {
-      if (this.private.time >= 1) {
-        this.private.time--;
+      if (this.private.timeLeft >= 1) {
+        this.private.timeLeft--;
       } else {
-        this.private.time = 0;
+        this.private.timeLeft = 0;
         this._completeState();
       }
     }
   },
   computed: {
     countMinutes: function () {
-      const displayTime = (this.private.time === -5 ? this.private.default.time : this.private.time);
+      const displayTime = (this.private.timeLeft === -5 ? this.private.default.timeLeft : this.private.timeLeft);
       const minutes = Math.floor(displayTime / 60);
       return this._padTime(minutes);
     },
     countSeconds: function () {
-      const displayTime = (this.private.time === -5 ? this.private.default.time : this.private.time);
+      const displayTime = (this.private.timeLeft === -5 ? this.private.default.timeLeft : this.private.timeLeft);
       const seconds = displayTime - (this.countMinutes * 60);
       return this._padTime(seconds);
     }
   }
 })
 
-// https://developer.mozilla.org/en-US/docs/Web/API/notification
-function sendNotification(taskNameInput) {
-
-  // Let's check if the browser supports notifications
-  if (!('Notification' in window)) {
-    alert('This browser does not support desktop notification');
-  }
-
-  // Let's check whether notification permissions have already been granted
-  else if (Notification.permission === 'granted') {
-    // If it's okay let's create a notification
-    const notification = new Notification('Podoromo Timer', { 'body': taskNameInput })
-  }
-
-  // Otherwise, we need to ask the user for permission
-  else if (Notification.permission !== 'denied') {
-    Notification.requestPermission().then(function (permission) {
-      // If the user accepts, let's create a notification
-      if (permission === 'granted') {
-        const notification = new Notification('Podoromo Timer', { 'body': taskNameInput })
-      }
-    });
-  }
-
-  // At last, if the user has denied notifications, and you 
-  // want to be respectful there is no need to bother them any more.
-} Notification.requestPermission().then(function (result) {
-  console.log(result);
-});
-
-// Generate a UUID from https://stackoverflow.com/a/8809472/6622966
-function generateUUID() { // Public Domain/MIT
-  var d = new Date().getTime();
-  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-    d += performance.now(); //use high-precision timer if available
-  }
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (d + Math.random() * 16) % 16 | 0;
-    d = Math.floor(d / 16);
-    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-  });
-}
+document.getElementById("task-input").focus();
