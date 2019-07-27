@@ -147,20 +147,23 @@ body {
 }
 
 .list-item-text {
-  margin: 20px;
+  margin: auto 1em;
   font-style: italic;
 }
 
 .task-history {
   display: flex;
   align-items: flex-start;
-
   flex-direction: column;
+
   list-style-type: none;
   padding: 0.5em;
 }
 
 .task-history-item {
-  display: block;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+
   margin-bottom: 0.5em;
 }

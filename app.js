@@ -8,16 +8,17 @@ const app = new Vue({
     timer: null,
     taskDone: [],
     private: {
-      time: (25*60),
-      totalTime: 0,
+      time: -5,
+      timeInput: -5,
       message: {
         start: 'Hit start!',
-        counting: 'Greatness is within sight!!',
-        pause: 'Never quit, keep going!!'
+        counting: 'Greatness is within sight!',
+        pause: 'Never quit, keep going!'
       },
       alertTiming: 800,
       default: {
-        taskName: 'task'
+        taskName: 'task',
+        time: (25 * 60)
       }
     }
   },
@@ -32,7 +33,9 @@ const app = new Vue({
       this.taskDone.splice(this.taskDone.indexOf(item), 1);
     },
     countingState: function () {
-      if (!this.private.totalTime) { this.private.totalTime = this.private.time; }
+      if (this.private.timeInput === -5 && this.private.time === -5) { this.private.timeInput = this.private.default.time; }
+      this.private.time = (this.private.time === -5 ? this.private.default.time : this.private.time);
+
       this.timer = setInterval(() => this._countdown(), 1000);
       this.resetButton = true;
       this.title = this.private.message.counting;
@@ -50,13 +53,13 @@ const app = new Vue({
     },
     resetState: function () {
       this._saveTask();
-      this.private.time = (25*60);
+      this.private.time = -5;
       clearInterval(this.timer);
       this.timer = null;
       this.resetButton = false;
       this.title = this.private.message.start;
       this.taskName = ''
-      this.private.totalTime = 0;
+      this.private.timeInput = -5;
 
       document.getElementById('task-input').removeAttribute('hidden');
       document.getElementById('task-display').setAttribute('hidden', 'hidden');
@@ -70,13 +73,15 @@ const app = new Vue({
       sendNotification(this.taskName);
     },
     _saveTask: function () {
-      const time = this.private.totalTime - this.private.time
+      const time = this.private.timeInput - this.private.time;
+      const timeDone = new Date();
       var completedTask = {
         'UUID': generateUUID(),
         'time': time,
         'timeMinutesFancy': Math.floor(time / 60),
-        'timeSecondsFancy': time - (Math.floor(time / 60))*60,
-        'taskName': this.taskName
+        'timeSecondsFancy': time - (Math.floor(time / 60)) * 60,
+        'taskName': this.taskName,
+        'timeDone': timeDone.toLocaleTimeString()
       }
       this.taskDone.unshift(completedTask);
     },
@@ -94,11 +99,13 @@ const app = new Vue({
   },
   computed: {
     countMinutes: function () {
-      const minutes = Math.floor(this.private.time / 60);
+      const displayTime = (this.private.time === -5 ? this.private.default.time : this.private.time);
+      const minutes = Math.floor(displayTime / 60);
       return this._padTime(minutes);
     },
     countSeconds: function () {
-      const seconds = this.private.time - (this.countMinutes * 60);
+      const displayTime = (this.private.time === -5 ? this.private.default.time : this.private.time);
+      const seconds = displayTime - (this.countMinutes * 60);
       return this._padTime(seconds);
     }
   }

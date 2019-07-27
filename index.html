@@ -50,12 +50,10 @@
       <h5 class="cover-heading" id="task-input"><input type="text" class="form-control" placeholder="Enter title" v-model="taskName" v-on:keyup.enter="countingState"></h5>
 
       <ul class="task-history">
-        <li class="task-history-item" v-for="item in taskDone"><button class="btn btn-sm btn-danger" :id="item.UUID" @click="removeTask(item.UUID)">X</button><span class="list-item-text">{{ item.taskName }} | {{ item.timeMinutesFancy }} min {{ item.timeSecondsFancy }} sec</span></li>
+        <li class="task-history-item" v-for="item in taskDone"><button class="btn btn-sm btn-danger" :id="item.UUID" @click="removeTask(item.UUID)">X</button><span class="list-item-text" style="display:inline-block;">{{ item.taskName }} | {{ item.timeMinutesFancy }} min {{ item.timeSecondsFancy }} sec<br />{{item.timeDone}}</span></li>
       </ul>
 
     </main>
-
-    <p class="text-sm">Tap on the name of the task to remove it.</p>
   </div>
 
   <link rel="stylesheet" href="./styles/bootstrap-min-4-0-0.css">
