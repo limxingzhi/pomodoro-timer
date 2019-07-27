@@ -6,8 +6,10 @@ const app = new Vue({
     title: 'Enter your task name and hit Start!',
     taskName: '',
     timer: null,
+    taskDone: [],
     private: {
-      totalTime: (25*60),
+      time: (25*60),
+      totalTime: 0,
       message: {
         start: 'Hit start!',
         counting: 'Greatness is within sight!!',
@@ -20,7 +22,17 @@ const app = new Vue({
     }
   },
   methods: {
+    removeTask: function (taskId) {
+      // https://www.w3schools.com/jsref/jsref_find.asp
+      const item = this.taskDone.find(function (item) {
+        return item.UUID == taskId;
+      });
+
+      // searches for the index of the item and removes it from the array
+      this.taskDone.splice(this.taskDone.indexOf(item), 1);
+    },
     countingState: function () {
+      if (!this.private.totalTime) { this.private.totalTime = this.private.time; }
       this.timer = setInterval(() => this._countdown(), 1000);
       this.resetButton = true;
       this.title = this.private.message.counting;
@@ -37,12 +49,14 @@ const app = new Vue({
       this.title = this.private.message.pause;
     },
     resetState: function () {
-      this.private.totalTime = (25 * 60);
+      this._saveTask();
+      this.private.time = (25*60);
       clearInterval(this.timer);
       this.timer = null;
       this.resetButton = false;
       this.title = this.private.message.start;
       this.taskName = ''
+      this.private.totalTime = 0;
 
       document.getElementById('task-input').removeAttribute('hidden');
       document.getElementById('task-display').setAttribute('hidden', 'hidden');
@@ -51,29 +65,40 @@ const app = new Vue({
       const bgColor = document.body.style.backgroundColor;
       document.body.style.backgroundColor = 'red';
       setTimeout(() => { document.body.style.backgroundColor = bgColor }, this.private.alertTiming);
-      this.resetState();
 
+      this.resetState();
       sendNotification(this.taskName);
+    },
+    _saveTask: function () {
+      const time = this.private.totalTime - this.private.time
+      var completedTask = {
+        'UUID': generateUUID(),
+        'time': time,
+        'timeMinutesFancy': Math.floor(time / 60),
+        'timeSecondsFancy': time - (Math.floor(time / 60))*60,
+        'taskName': this.taskName
+      }
+      this.taskDone.unshift(completedTask);
     },
     _padTime: function (time) {
       return (time < 10 ? '0' : '') + time;
     },
     _countdown: function () {
-      if (this.private.totalTime >= 1) {
-        this.private.totalTime--;
+      if (this.private.time >= 1) {
+        this.private.time--;
       } else {
-        this.private.totalTime = 0;
+        this.private.time = 0;
         this._completeState();
       }
     }
   },
   computed: {
     countMinutes: function () {
-      const minutes = Math.floor(this.private.totalTime / 60);
+      const minutes = Math.floor(this.private.time / 60);
       return this._padTime(minutes);
     },
     countSeconds: function () {
-      const seconds = this.private.totalTime - (this.countMinutes * 60);
+      const seconds = this.private.time - (this.countMinutes * 60);
       return this._padTime(seconds);
     }
   }
@@ -108,3 +133,16 @@ function sendNotification(taskNameInput) {
 } Notification.requestPermission().then(function (result) {
   console.log(result);
 });
+
+// Generate a UUID from https://stackoverflow.com/a/8809472/6622966
+function generateUUID() { // Public Domain/MIT
+  var d = new Date().getTime();
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    d += performance.now(); //use high-precision timer if available
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}

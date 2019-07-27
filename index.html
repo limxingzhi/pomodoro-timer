@@ -14,13 +14,13 @@
   <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
     <header class="masthead mb-auto title-container">
       <div class="inner">
-        <!-- <h5 class="masthead-brand">Podoromo Timer</h5> -->
         <nav class="nav nav-masthead justify-content-center">
-          <a class="nav-link" target="_blank" href="">foo bar</a>
+          <a class="nav-link" target="_blank" href="https://xingzhi.dev/blog/writing-a-pomodoro-timer/">Read about it</a>
           <a href="https://scotch.io/bar-talk/build-a-pomodoro-timer-with-vuejs-solution-to-code-challenge-6"
-        target="_blank" class="nav-link">Codepen from scotch.io</a>
+        target="_blank" class="nav-link">Inspired by scotch.io</a>
         </nav>
       </div>
+      <h3>Pomodoro Timer</h3>
     </header>
     <!-- our template -->
     <main role="main" id="app" class="inner cover">
@@ -47,10 +47,15 @@
 
       <span class="cover-heading task-display-name" hidden id="task-display">{{ taskName }}</span>
 
-      <h5 class="cover-heading" id="task-input"><input type="text" class="form-control" placeholder="Enter title" v-model="taskName"></h5>
+      <h5 class="cover-heading" id="task-input"><input type="text" class="form-control" placeholder="Enter title" v-model="taskName" v-on:keyup.enter="countingState"></h5>
+
+      <ul class="task-history">
+        <li class="task-history-item" v-for="item in taskDone"><button class="btn btn-sm btn-danger" :id="item.UUID" @click="removeTask(item.UUID)">X</button><span class="list-item-text">{{ item.taskName }} | {{ item.timeMinutesFancy }} min {{ item.timeSecondsFancy }} sec</span></li>
+      </ul>
+
     </main>
 
-    <p class="text-sm">This is a MVP for a Pomodoro timer that uses local storage.</p>
+    <p class="text-sm">Tap on the name of the task to remove it.</p>
   </div>
 
   <link rel="stylesheet" href="./styles/bootstrap-min-4-0-0.css">

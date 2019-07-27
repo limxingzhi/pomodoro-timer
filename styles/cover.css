@@ -145,3 +145,22 @@ body {
   font-size: 4rem;
   text-transform: uppercase;
 }
+
+.list-item-text {
+  margin: 20px;
+  font-style: italic;
+}
+
+.task-history {
+  display: flex;
+  align-items: flex-start;
+
+  flex-direction: column;
+  list-style-type: none;
+  padding: 0.5em;
+}
+
+.task-history-item {
+  display: block;
+  margin-bottom: 0.5em;
+}
