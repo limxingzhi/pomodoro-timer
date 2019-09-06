@@ -5,6 +5,7 @@ const app = new Vue({
   el: '#app',
   data: {
     resetButton: false,
+    clearButton: false,
     title: 'Welcome!',
     taskName: '',
     timer: null,
@@ -24,7 +25,21 @@ const app = new Vue({
       }
     }
   },
+  mounted () {
+    this.taskDone = JSON.parse(window.localStorage.getItem('tasks'));
+    if (!this.taskDone) {
+      this.taskDone = [];
+    }
+    if (this.taskDone.length > 0) {
+      this.clearButton = true;
+    } else {
+      this.clearButton = false;
+    }
+  },
   methods: {
+    clearHistory: function () {
+      this.taskDone = [];
+    },
     removeTask: function (taskId) {
       // https://www.w3schools.com/jsref/jsref_find.asp
       const item = this.taskDone.find(function (item) {
@@ -114,6 +129,17 @@ const app = new Vue({
       const displayTime = (this.private.timeLeft === -5 ? this.private.default.timeLeft : this.private.timeLeft);
       const seconds = displayTime - (this.countMinutes * 60);
       return this._padTime(seconds);
+    }
+  },
+  watch: {
+    taskDone: function (val) {
+      window.localStorage.setItem('tasks', JSON.stringify(this.taskDone));
+      
+      if (this.taskDone.length > 0) {
+        this.clearButton = true;
+      } else {
+        this.clearButton = false;
+      }
     }
   }
 })
