@@ -1,6 +1,13 @@
 'use strict'
 
-// https://developer.mozilla.org/en-US/docs/Web/API/notification
+/**
+ * This function sends a browser notification based on the task name input
+ * Taken from https://developer.mozilla.org/en-US/docs/Web/API/notification
+ *
+ * @param {string} taskNameInput - The notification string to display
+ *
+ * @example
+ */
 function sendNotification(taskNameInput) {
 
   // Let's check if the browser supports notifications
@@ -30,7 +37,14 @@ function sendNotification(taskNameInput) {
   // console.log(result);
 });
 
-// Generate a UUID from https://stackoverflow.com/a/8809472/6622966
+/**
+ * This function returns a UUID
+ * Taken from from https://stackoverflow.com/a/8809472/6622966
+ *
+ * @return {string} A UUID in string
+ *
+ * @example
+ */
 function generateUUID() { // Public Domain/MIT
   var d = new Date().getTime();
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -41,4 +55,25 @@ function generateUUID() { // Public Domain/MIT
     d = Math.floor(d / 16);
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
+}
+
+/**
+ * This function reads a value in local storage and parse that data into an object
+ *
+ * @param {string} key - The key of the object to read from
+ *
+ * @return {Object} A UUID in string
+ */
+function readLS(key) {
+  return JSON.parse(window.localStorage.getItem(key));
+}
+
+/**
+ * This function reads an string for the key and an object to write to
+ *
+ * @param {string} key - The key of the object to write to
+ * @param {Object} inputObj - The JSON Object to stringify and write to the local storage
+ */
+function writeLS(key, inputObj) {
+  window.localStorage.setItem(key , JSON.stringify(inputObj));
 }

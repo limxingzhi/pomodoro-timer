@@ -26,7 +26,7 @@ const app = new Vue({
     }
   },
   mounted () {
-    this.taskDone = JSON.parse(window.localStorage.getItem('tasks'));
+    this.taskDone = readLS('tasks');
     if (!this.taskDone) {
       this.taskDone = [];
     }
@@ -133,7 +133,7 @@ const app = new Vue({
   },
   watch: {
     taskDone: function (val) {
-      window.localStorage.setItem('tasks', JSON.stringify(this.taskDone));
+      writeLS('tasks', this.taskDone);
       
       if (this.taskDone.length > 0) {
         this.clearButton = true;
