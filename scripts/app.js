@@ -6,18 +6,12 @@ const app = new Vue({
   data: {
     resetButton: false,
     clearButton: false,
-    title: 'Welcome!',
     taskName: '',
     timer: null,
     taskDone: [],
     private: {
       timeLeft: -5,
       timeInput: -5,
-      message: {
-        start: 'Hit start!',
-        counting: 'Greatness is within sight!',
-        pause: 'Never quit, keep going!'
-      },
       alertTiming: 800,
       default: {
         taskName: 'task',
@@ -55,7 +49,6 @@ const app = new Vue({
 
       this.timer = setInterval(() => this._countdown(), 1000);
       this.resetButton = true;
-      this.title = this.private.message.counting;
 
       this.taskName = this.taskName == '' ? this.private.default.taskName : this.taskName;
 
@@ -68,7 +61,6 @@ const app = new Vue({
       clearInterval(this.timer);
       this.timer = null;
       this.resetButton = true;
-      this.title = this.private.message.pause;
 
       setTimeout(() => { document.getElementById('start-btn').focus(); }, 100);
     },
@@ -78,7 +70,6 @@ const app = new Vue({
       clearInterval(this.timer);
       this.timer = null;
       this.resetButton = false;
-      this.title = this.private.message.start;
       this.taskName = ''
       this.private.timeInput = -5;
 

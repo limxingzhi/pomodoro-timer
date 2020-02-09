@@ -10,62 +10,74 @@
 </head>
 
 <body class="text-center">
+  <header class="masthead mb-auto title-container">
+    <div class="inner">
+      <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Pomodoro Timer</a>
+      </nav>
+  </header>
+  <!-- our template -->
 
-  <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-    <header class="masthead mb-auto title-container">
-      <div class="inner">
-        <nav class="nav nav-masthead justify-content-center">
-          <a class="nav-link" target="_blank" href="https://xingzhi.dev/blog/writing-a-pomodoro-timer/">Read about it</a>
-          <a href="https://scotch.io/bar-talk/build-a-pomodoro-timer-with-vuejs-solution-to-code-challenge-6"
-        target="_blank" class="nav-link">Inspired by scotch.io</a>
-        </nav>
-      </div>
-      <h3>Pomodoro Timer</h3>
-    </header>
-    <!-- our template -->
+  <div class="d-flex h-100 p-3 mx-auto flex-column">
     <main role="main" id="app" class="inner cover">
 
-      <h5 class="cover-heading">{{ title }}</h5>
-      <div id="timer">
-        <p class=lead">
-          <span id="minutes">{{ countMinutes }}</span>
-          <span id="middle">:</span>
-          <span id="seconds">{{ countSeconds }}</span>
-        </p>
+      <div class="container">
+
+        <form class="form-inline row justify-content-center" onsubmit="return false;">
+
+          <div class="form-group">
+            <input type="text" id="task-input" class="form-control md-2 mr-sm-2" placeholder="Enter title"
+              v-model="taskName" v-on:keyup.enter="countingState">
+
+            <!--     Start TImer -->
+            <input type="button" id="start-btn" class="btn btn-primary md-2 mr-sm-2" v-if="!timer"
+              @click="countingState" value="Start"></input>
+            <!--     Pause Timer -->
+            <input type="button" id="pause-btn" class="btn btn-warning md-2 mr-sm-2" v-if="timer" @click="pausedState"
+              value="Pause"></input>
+            <!--     Restart Timer -->
+            <input type="button" id="reset-btn" class="btn btn-danger md-2 mr-sm-2" v-if="resetButton"
+              @click="resetState" value="Reset"></input>
+          </div>
+
+        </form>
+
+        <br />
+
+        <div id="timer" class="container">
+          <h1>{{ countMinutes }} : {{ countSeconds }} </h1>
+        </div>
+
+        <br />
+
+        <h1 class="" hidden id="task-display">{{ taskName }}</h1>
       </div>
 
-      <div id="buttons" class="cover-heading">
-        <!--     Start TImer -->
-        <button id="start-btn" class="btn btn-lg btn-primary" v-if="!timer" @click="countingState">Start</button>
-        <!--     Reset Timer -->
-        <!-- <button id="done" class="btn btn-lg btn-success" v-if="resetButton" @click="resetTimer">Done</button> -->
-        <!--     Pause Timer -->
-        <button id="pause-btn" class="btn btn-lg btn-warning" v-if="timer" @click="pausedState">Pause</button>
-        <!--     Restart Timer -->
-        <button id="reset-btn" class="btn btn-lg btn-danger" v-if="resetButton" @click="resetState">Reset</button>
-      </div>
-
-      <span class="cover-heading task-display-name" hidden id="task-display">{{ taskName }}</span>
-
-      <input id="task-input" type="text" class="form-control cover-heading" placeholder="Enter title" v-model="taskName" v-on:keyup.enter="countingState">
-
-      <ul class="task-history">
-        <li class="task-history-item" v-for="item in taskDone"><button class="btn btn-sm btn-danger" :id="item.UUID" @click="removeTask(item.UUID)">X</button><span class="list-item-text" style="display:inline-block;">{{ item.taskName }} | {{ item.timeMinutesFancy }} min {{ item.timeSecondsFancy }} sec<br />{{item.timeDone}}</span></li>
-      </ul>
+      <br />
 
       <!--     Clear History -->
-      <button id="clear-btn" class="btn btn-lg btn-danger" v-if="clearButton" @click="clearHistory">Clear History</button>
+      <div class="container">
+        <button id="clear-btn" class="btn btn-lg btn-danger" v-if="clearButton" @click="clearHistory">Clear
+          History</button>
+      </div>
+
+      <div class="  d-inline-flex p-2 bd-highlight" v-for="item in taskDone" :id="item.UUID">
+        <div class="card border-success mb-3" style="max-width: 18rem;">
+          <div class="card-header bg-transparent border-success">{{item.timeDone}}</div>
+          <div class="card-body text-success">
+
+            <h5 class="card-title">{{ item.taskName }}</h5>
+            <p class="card-text">{{ item.timeMinutesFancy }} min {{ item.timeSecondsFancy }} sec</span></p>
+          </div>
+          <div class="card-footer bg-transparent border-success" @click="removeTask(item.UUID)">x</div>
+        </div>
+      </div>
 
     </main>
-    <footer class="mastfoot mt-auto">
-      <div class="inner">
-        <p>Please take note that this app uses local storage and notifications</a>.</p>
-      </div>
-    </footer>
   </div>
 
   <link rel="stylesheet" href="./styles/bootstrap-min-4-0-0.css">
-  <link rel="stylesheet" href="./styles/cover.css">
+  <!-- <link rel="stylesheet" href="./styles/cover.css"> -->
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
   <script src="./scripts/utils.js"></script>
